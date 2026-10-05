@@ -1,9 +1,8 @@
 {% extends "base.html" %}
-{% block title %}My interviews{% endblock %}
+{% block title %}Interviews{% endblock %}
 {% block content %}
 <section class="page-heading">
-  <div><p class="eyebrow">YOUR OPPORTUNITIES</p><h1>My interviews</h1><p>Keep every opportunity, round and result in one place.</p></div>
-  <a class="button button-primary" href="{% url 'student_interview_add' %}"><span class="button-plus" aria-hidden="true">+</span> Add interview</a>
+  <div><p class="eyebrow">STUDENT PROGRESS</p><h1>Interviews</h1><p>Review interviews and outcomes across the groups you manage.</p></div>
 </section>
 <section class="directory-toolbar">
   <div class="directory-toolbar-meta">
@@ -17,44 +16,37 @@
 </section>
 {% if interviews %}
   {% if view_mode == "table" %}
-  {% include "tracker/_interview_table.html" with interviews=interviews link=True %}
+  {% include "tracker/_interview_table.html" with interviews=interviews show_student=True admin_link=True %}
   {% elif view_mode == "list" %}
-  <section class="directory-rows" aria-label="My interviews">
+  <section class="directory-rows" aria-label="Interviews">
     {% for interview in interviews %}
     <article class="directory-row-card interview-directory-row">
       <span class="interview-company-mark interview-company-mark-small" aria-hidden="true">{{ interview.company_name|slice:":1"|upper }}</span>
-      <span class="directory-row-copy"><strong><a href="{% url 'student_interview_detail' interview.pk %}">{{ interview.company_name }}</a></strong><small>{{ interview.role }} · {{ interview.group.name }} · {{ interview.date_of_interview|date:"d M Y" }}</small></span>
+      <span class="directory-row-copy"><strong><a href="{% url 'admin_interview_detail' interview.pk %}">{{ interview.company_name }}</a></strong><small>{{ interview.student.username }} · {{ interview.role }} · {{ interview.group.name }} · {{ interview.date_of_interview|date:"d M Y" }}</small></span>
       <span class="directory-row-count"><strong>{{ interview.progress }}</strong><small>Rounds cleared</small></span>
       <span class="status-badge {{ interview.badge }}">{{ interview.final_label }}</span>
-      <a class="button button-quiet" href="{% url 'student_interview_edit' interview.pk %}">Edit details</a>
+      {% if interview.job_posting_url %}<a class="button button-quiet" href="{{ interview.job_posting_url }}" target="_blank" rel="noopener noreferrer">Job link ↗</a>{% endif %}
     </article>
     {% endfor %}
   </section>
   {% else %}
-  <section class="interview-directory-cards" aria-label="My interviews">
+  <section class="interview-directory-cards" aria-label="Interviews">
     {% for interview in interviews %}
     <article class="panel interview-directory-card">
       <div class="interview-card-top">
         <span class="interview-company-mark interview-company-mark-small" aria-hidden="true">{{ interview.company_name|slice:":1"|upper }}</span>
         <span class="status-badge {{ interview.badge }}">{{ interview.final_label }}</span>
       </div>
-      <p class="eyebrow">{{ interview.date_of_interview|date:"d M Y" }}</p>
-      <h2><a href="{% url 'student_interview_detail' interview.pk %}">{{ interview.company_name }}</a></h2>
-      <p class="interview-card-role">{{ interview.role }}</p>
-      <div class="interview-card-meta"><span>{{ interview.group.name }}</span><span>{{ interview.progress }} rounds cleared</span></div>
-      <div class="interview-card-actions">
-        <a class="button button-quiet" href="{% url 'student_interview_detail' interview.pk %}">View interview</a>
-        <a class="button button-primary" href="{% url 'student_interview_edit' interview.pk %}">Edit details</a>
-      </div>
+      <p class="eyebrow">{{ interview.student.username }} · {{ interview.group.name }}</p>
+      <h2><a href="{% url 'admin_interview_detail' interview.pk %}">{{ interview.company_name }}</a></h2>
+      <p class="interview-card-role">{{ interview.role }} · {{ interview.date_of_interview|date:"d M Y" }}</p>
+      <div class="interview-card-meta"><span>{{ interview.progress }} rounds cleared</span>{% if interview.job_posting_url %}<a class="job-role-link" href="{{ interview.job_posting_url }}" target="_blank" rel="noopener noreferrer">Open job link ↗</a>{% else %}<span>Job link not provided</span>{% endif %}</div>
+      <div class="interview-card-actions"><a class="button button-primary" href="{% url 'admin_interview_detail' interview.pk %}">View interview</a></div>
     </article>
     {% endfor %}
   </section>
   {% endif %}
 {% else %}
-<div class="directory-empty-state">
-  <span class="empty-icon">✦</span><h2>Your interview list is ready.</h2>
-  <p>Add your first opportunity to keep its rounds and outcome organized.</p>
-  <a class="button button-primary" href="{% url 'student_interview_add' %}">Add your first interview</a>
-</div>
+<div class="directory-empty-state"><span class="empty-icon">✦</span><h2>No interviews to review yet</h2><p>Student interviews in your groups will appear here.</p></div>
 {% endif %}
 {% endblock %}

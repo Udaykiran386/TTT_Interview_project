@@ -13,11 +13,12 @@ Django app where admins manage students and groups, and students track interview
    ```bash
    cp .env.example .env     # edit SECRET_KEY and DATABASE_URL
    ```
-   `.env` is loaded automatically. If `DATABASE_URL` is unset, SQLite is used as a fallback.
+   `.env` is loaded automatically. If `DATABASE_URL` is unset, SQLite is used as a fallback. Set a real sender and admin address, plus the SMTP username and provider-generated app password in `.env`. For Gmail, `.env.example` includes the SMTP host and port; turn on two-step verification and create a new app password in Google Account security settings. Add the app password locally as `EMAIL_HOST_PASSWORD` (spaces omitted), never in source code or chat. In development, email is printed to the console only when SMTP is not configured.
 3. `python manage.py migrate`
 4. `python manage.py seed_demo_data`
 5. `python manage.py runserver`
 6. `python manage.py test`
+7. Verify actual SMTP delivery: `python manage.py test_email --to recipient@example.com`. The command reports missing configuration or SMTP failures without printing the password.
 
 Demo logins (password `demo12345`): `admin`, `alice`, `bob`, `carol`.
 
@@ -27,6 +28,9 @@ Demo logins (password `demo12345`): `admin`, `alice`, `bob`, `carol`.
 - Admins only see and manage groups they created. Students only see and edit their own interviews (others return 404).
 - Admins can browse student profiles for their own groups. Removing a student from a group deletes that group’s interviews and rounds for the student while preserving interviews in other groups.
 - Interview records can include an HR contact name, phone number, and email address.
+- Admin-created student accounts are available immediately. External registrations receive a one-time 6-digit email verification code (valid for 10 minutes and 5 attempts); after verification, an administrator must approve the request before a student account or dashboard is created. Admins review verified requests from **Sign-up requests**.
+- The student directory supports searchable, paginated card, table, and list views.
+- Admin analytics summarize interview outcomes and selection rate, with upcoming interview dates; student dashboards highlight their next interview dates and round progress.
 - Rounds are added via AJAX (CSRF token sent in the `X-CSRFToken` header). The final result can only be set once all rounds are cleared or rejected; adding a new round reopens the interview.
 - The responsive interface is served from `static/css/app.css` with lightweight interactions in `static/js/app.js`; no frontend build step is required. Google Fonts are optional, with system font fallbacks when they are unavailable.
 - `python manage.py createsuperuser` creates a user that is automatically flagged `is_admin`.
