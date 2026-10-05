@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}My interviews{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div><p class="eyebrow">YOUR OPPORTUNITIES</p><h1>My interviews</h1><p>Keep every opportunity, round and result in one place.</p></div>
+</section>
+<div class="interviews-layout">
+  <section class="content-section interviews-list-section">
+    <div class="section-heading"><div><p class="eyebrow">YOUR PIPELINE</p><h2>All interviews</h2></div><span class="section-meta">{{ interviews|length }} tracked</span></div>
+    {% include "tracker/_interview_table.html" with link=True %}
+  </section>
+  <section class="panel add-interview-panel">
+    <div class="panel-heading"><span class="panel-icon" aria-hidden="true">＋</span><div><p class="eyebrow">A NEW OPPORTUNITY</p><h2>Add an interview</h2><p>Start with the basics. You can add rounds next.</p></div></div>
+    <form method="post" class="stack-form">{% csrf_token %}{% include "tracker/_form.html" %}
+      <button class="button button-primary button-wide" type="submit">Save interview <span aria-hidden="true">→</span></button>
+    </form>
+  </section>
+</div>
+{% endblock %}

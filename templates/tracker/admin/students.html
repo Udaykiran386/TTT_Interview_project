@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Students{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div><p class="eyebrow">YOUR COMMUNITY</p><h1>Student directory</h1><p>Get to know your students and follow their interview progress.</p></div>
+  <a class="button button-primary" href="{% url 'admin_dashboard' %}"><span aria-hidden="true">←</span> Back to overview</a>
+</section>
+<section class="student-directory">
+  {% for student in students %}
+  <a class="directory-card" href="{% url 'admin_student_detail' student.pk %}">
+    <span class="directory-avatar">{{ student.username|slice:":1"|upper }}</span>
+    <span class="directory-card-main">
+      <strong>{{ student.username }}</strong>
+      <small>{{ student.email|default:"No email provided" }}</small>
+      <span class="directory-groups">
+        {% for membership in student.memberships.all %}
+          {% if membership.group.admin_id == user.pk %}<span>{{ membership.group.name }}</span>{% endif %}
+        {% empty %}<span>No groups</span>{% endfor %}
+      </span>
+    </span>
+    <span class="directory-arrow" aria-hidden="true">↗</span>
+  </a>
+  {% empty %}
+  <div class="empty-state directory-empty"><span class="empty-icon">◎</span><h2>No students to show yet.</h2><p>Add a student to one of your groups to see them in your directory.</p><a class="button button-primary" href="{% url 'admin_groups' %}">Explore groups</a></div>
+  {% endfor %}
+</section>
+{% endblock %}
