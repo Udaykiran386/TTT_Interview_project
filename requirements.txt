@@ -1,4 +1,11 @@
-Django>=5.0,<5.3
-psycopg[binary]>=3.1
-dj-database-url>=2.1
-python-dotenv>=1.0
+SECRET_KEY=n3!@9f4z^l$7&x0#p1v8c2r5t6u9w2y3z5a5b9c7d8e9f0g1h2i3j4k5l6m7n8
+DEBUG=1
+ALLOWED_HOSTS=localhost,127.0.0.1,.vercel.app
+DEFAULT_FROM_EMAIL=udaykiranraga@gmail.com
+ADMIN_EMAIL=admin@example.com
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_HOST_USER=udaykiranraga@gmail.com
+EMAIL_HOST_PASSWORD=mdzi bwxe jwuw otvf
+EMAIL_USE_TLS=1
+DATABASE_URL=postgresql://neondb_owner:npg_OZinblzg9N7Q@ep-bold-queen-b4oo38id-pooler.c-6.us-east-2.aws.neon.tech/interview_db?sslmode=require
